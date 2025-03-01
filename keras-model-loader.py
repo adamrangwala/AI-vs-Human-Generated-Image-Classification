@@ -9,6 +9,7 @@ from tensorflow.keras.models import load_model
 import tempfile
 from custom_objects import CustomDataAugmentation, ResNetPreprocessingLayer
 from PIL import Image
+from streamlit_extras.let_it_rain import rain
 
 # Configure page
 st.set_page_config(page_title="Keras Model Loader", layout="wide")
@@ -131,9 +132,10 @@ def preprocess_image(image, target_size=(640,640)):
 # Function to make prediction
 def predict_image(model, img_array):
     """Make prediction using the model"""
+    
     prediction = model.predict(img_array)
+    
     # Binary classification where 0=Human, 1=AI
-    st.write(f"Prediction: {prediction}")
     probability = prediction[0][0]
     return probability
 
@@ -310,10 +312,11 @@ if uploaded_file is not None:
         try:
             # Open and display the image
             image = Image.open(uploaded_img).convert("RGB")
-            
-            st.markdown("<div class='image-container'>", unsafe_allow_html=True)
-            st.image(image, caption="Uploaded Image", width=400)
-            st.markdown("</div>", unsafe_allow_html=True)
+
+            sample_col1:
+                st.markdown("<div class='image-container'>", unsafe_allow_html=True)
+                st.image(image, caption="Uploaded Image", width=400)
+                st.markdown("</div>", unsafe_allow_html=True)
             
             # Add a spinner while processing
             with st.spinner("Analyzing image..."):
@@ -327,10 +330,12 @@ if uploaded_file is not None:
                 # Display result
                 if probability > 0.5:
                     confidence = round(probability * 100, 2)
-                    st.markdown(f"<div class='result-header ai-result'>AI-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
+                    sample_col2.st.markdown(f"<div class='result-header ai-result'>AI-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
+                    sample_col2.st.rain(emoji="👨", font_size=54, falling_speed=5, animation_length="infinite") 
                 else:
                     confidence = round((1 - probability) * 100, 2)
-                    st.markdown(f"<div class='result-header human-result'>Human-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
+                    sample_col2.st.markdown(f"<div class='result-header human-result'>Human-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
+                    sample_col2.st.rain(emoji="🤖", font_size=54, falling_speed=5, animation_length="infinite") 
                 
                 # Add explanation
                 st.markdown("### How it works")

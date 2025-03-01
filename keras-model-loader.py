@@ -34,7 +34,7 @@ st.markdown("""
 st.title("Keras Model Loader")
 st.markdown("Upload a .keras or .h5 model file to view its architecture and weights.")
 
-# Create upload widget
+# Create upload widget for model
 uploaded_file = st.file_uploader("Choose a model file", type=["keras", "h5"], 
                                help="Upload your TensorFlow/Keras model (.keras or .h5 format)")
 
@@ -136,7 +136,7 @@ if uploaded_file is not None:
         
         # Display success message
         st.success(f"Model loaded successfully from {uploaded_file.name}")
-        
+
         # Create tabs for different views
         tabs = st.tabs(["Summary", "Architecture", "Weights", "Code Generation"])
         
@@ -258,25 +258,78 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"Error loading the model: {str(e)}")
         st.exception(e)
+    
+    # Image upload
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+   
+    st.markdown("### Or try a sample image:")
+    sample_col1, sample_col2 = st.columns(2)
+    
+    with sample_col1:
+        if st.button("Sample Human Photo"):
+            # Replace with path to your sample human image
+            sample_img_path = "samples/human_sample.jpg"
+            if os.path.exists(sample_img_path):
+                with open(sample_img_path, "rb") as file:
+                    uploaded_file = io.BytesIO(file.read())
+            else:
+                st.warning("Sample image not found. Please check the path.")
+    
+    with sample_col2:
+        if st.button("Sample AI Photo"):
+            # Replace with path to your sample AI image
+            sample_img_path = "samples/ai_sample.jpg"
+            if os.path.exists(sample_img_path):
+                with open(sample_img_path, "rb") as file:
+                    uploaded_file = io.BytesIO(file.read())
+            else:
+                st.warning("Sample image not found. Please check the path.")
+                
+    if uploaded_img is not None:
+        try:
+            # Open and display the image
+            image = Image.open(uploaded_file).convert("RGB")
+            
+            st.markdown("<div class='image-container'>", unsafe_allow_html=True)
+            st.image(image, caption="Uploaded Image", width=400)
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+            # Add a spinner while processing
+            with st.spinner("Analyzing image..."):
+                # Preprocess the image
+                # processed_img = preprocess_image(image,target_size)
+                
+                # Make prediction
+                probability = predict_image(model, image)
+                
+                # Display result
+                if probability > 0.5:
+                    confidence = round(probability * 100, 2)
+                    st.markdown(f"<div class='result-header ai-result'>AI-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
+                else:
+                    confidence = round((1 - probability) * 100, 2)
+                    st.markdown(f"<div class='result-header human-result'>Human-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
+                
+                # Add explanation
+                st.markdown("### How it works")
+                st.write("""
+                Our model analyzes various features in the image to determine if it was created by AI or a human. 
+                AI-generated images often have subtle patterns, inconsistencies in details like hands, eyes, 
+                or backgrounds, and other artifacts that the model has learned to recognize.
+                """)
+                
+                # Disclaimer
+                st.markdown("---")
+                st.caption("""
+                **Disclaimer**: While this model strives for accuracy, it may not be perfect. The rapidly evolving 
+                field of AI image generation means new models may produce images that are increasingly difficult to distinguish.
+                """)
+    else:   
+        st.info("Upload/Select an image file to begin.")
+        
+
 else:
     # Display instructions when no file is uploaded
     st.info("Upload a .keras or .h5 model file to begin.")
     
-    # Example section
-    with st.expander("How to use this app"):
-        st.markdown("""
-        ### Instructions:
-        1. Click on the file uploader above to select your Keras model file (.keras or .h5 format)
-        2. The app will load your model and display its architecture, summary, and weights information
-        3. You can download various representations of your model:
-           - Architecture as JSON
-           - Weights information as JSON
-           - Python code to recreate the model
-           - The model in different formats (SavedModel, H5, TF-Lite)
-        
-        ### Supported Features:
-        - Works with most TensorFlow/Keras model architectures
-        - Analyzes model layers and weights
-        - Generates code to recreate your model
-        - Multiple export formats
-        """)
+

@@ -117,6 +117,17 @@ print(model.summary())
     
     return code
     
+# Function to preprocess the image
+def preprocess_image(image, target_size=(640,640)):
+    """Preprocess the image to be compatible with the model"""
+    # Resize image
+    image = image.resize(target_size)
+    # Convert to array and normalize
+    img_array = np.array(image) / 255.0
+    # Add batch dimension
+    img_array = np.expand_dims(img_array, axis=0)
+    return img_array
+
 # Function to make prediction
 def predict_image(model, img_array):
     """Make prediction using the model"""
@@ -306,9 +317,9 @@ if uploaded_file is not None:
             
             # Add a spinner while processing
             with st.spinner("Analyzing image..."):
-                
-                # Convert image to a NumPy array
-                image_array = np.array(image)
+
+                # preprocess_image
+                image_array = preprocess_image(image)
                 
                 # Make prediction
                 probability = predict_image(model, image_array)

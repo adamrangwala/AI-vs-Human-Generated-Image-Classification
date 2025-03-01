@@ -324,6 +324,9 @@ if uploaded_file is not None:
                 **Disclaimer**: While this model strives for accuracy, it may not be perfect. The rapidly evolving 
                 field of AI image generation means new models may produce images that are increasingly difficult to distinguish.
                 """)
+                         
+        except Exception as e:
+            st.error(f"Error processing image: {e}")
     else:   
         st.info("Upload/Select an image file to begin.")
         

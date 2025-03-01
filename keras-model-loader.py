@@ -260,7 +260,7 @@ if uploaded_file is not None:
         st.exception(e)
     
     # Image upload
-    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
    
     st.markdown("### Or try a sample image:")
     sample_col1, sample_col2 = st.columns(2)
@@ -271,7 +271,7 @@ if uploaded_file is not None:
             sample_img_path = "samples/human_sample.jpg"
             if os.path.exists(sample_img_path):
                 with open(sample_img_path, "rb") as file:
-                    uploaded_file = io.BytesIO(file.read())
+                    uploaded_img = io.BytesIO(file.read())
             else:
                 st.warning("Sample image not found. Please check the path.")
     
@@ -281,14 +281,14 @@ if uploaded_file is not None:
             sample_img_path = "samples/ai_sample.jpg"
             if os.path.exists(sample_img_path):
                 with open(sample_img_path, "rb") as file:
-                    uploaded_file = io.BytesIO(file.read())
+                    uploaded_img = io.BytesIO(file.read())
             else:
                 st.warning("Sample image not found. Please check the path.")
                 
     if uploaded_img is not None:
         try:
             # Open and display the image
-            image = Image.open(uploaded_file).convert("RGB")
+            image = Image.open(uploaded_img).convert("RGB")
             
             st.markdown("<div class='image-container'>", unsafe_allow_html=True)
             st.image(image, caption="Uploaded Image", width=400)
@@ -300,7 +300,7 @@ if uploaded_file is not None:
                 # processed_img = preprocess_image(image,target_size)
                 
                 # Make prediction
-                probability = predict_image(model, image)
+                probability = predict_image(model, uploaded_img)
                 
                 # Display result
                 if probability > 0.5:
@@ -325,11 +325,10 @@ if uploaded_file is not None:
                 field of AI image generation means new models may produce images that are increasingly difficult to distinguish.
                 """)
                          
-        except Exception as e:
-            st.error(f"Error processing image: {e}")
+       except Exception as e:
+                st.error(f"Error processing image: {e}")   
     else:   
-        st.info("Upload/Select an image file to begin.")
-        
+            st.info("Upload/Select an image file to begin.")
 
 else:
     # Display instructions when no file is uploaded

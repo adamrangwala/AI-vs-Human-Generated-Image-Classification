@@ -306,11 +306,12 @@ if uploaded_file is not None:
             
             # Add a spinner while processing
             with st.spinner("Analyzing image..."):
-                # Preprocess the image
-                # processed_img = preprocess_image(image,target_size)
+                
+                # Convert image to a NumPy array
+                image_array = np.array(image)
                 
                 # Make prediction
-                probability = predict_image(model, image)
+                probability = predict_image(model, image_array)
                 
                 # Display result
                 if probability > 0.5:

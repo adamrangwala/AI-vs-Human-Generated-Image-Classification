@@ -300,7 +300,7 @@ if uploaded_file is not None:
                 # processed_img = preprocess_image(image,target_size)
                 
                 # Make prediction
-                probability = predict_image(model, uploaded_img)
+                probability = predict_image(model, image)
                 
                 # Display result
                 if probability > 0.5:

@@ -313,7 +313,7 @@ if uploaded_file is not None:
             # Open and display the image
             image = Image.open(uploaded_img).convert("RGB")
 
-            sample_col1:
+            with sample_col1:
                 st.markdown("<div class='image-container'>", unsafe_allow_html=True)
                 st.image(image, caption="Uploaded Image", width=400)
                 st.markdown("</div>", unsafe_allow_html=True)

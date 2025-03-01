@@ -123,8 +123,12 @@ if uploaded_file is not None:
             tmp_filename = tmp_file.name
         
         # Load the model from the temporary file
+        custom_objects = {
+          "CustomDataAugmentation": CustomDataAugmentation,
+          "ResNetPreprocessingLayer": ResNetPreprocessingLayer
+        }
         with st.spinner("Loading model..."):
-            model = load_model(tmp_filename)
+            model = load_model(tmp_filename, custom_objects=custom_objects)
         
         # Clean up the temporary file
         os.unlink(tmp_filename)

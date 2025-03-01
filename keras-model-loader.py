@@ -123,7 +123,7 @@ def preprocess_image(image, target_size=(640,640)):
     # Resize image
     image = image.resize(target_size)
     # Convert to array and normalize
-    img_array = np.array(image) / 255.0
+    img_array = np.array(image)
     # Add batch dimension
     img_array = np.expand_dims(img_array, axis=0)
     return img_array

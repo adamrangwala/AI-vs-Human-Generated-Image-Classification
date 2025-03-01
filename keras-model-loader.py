@@ -116,6 +116,15 @@ print(model.summary())
     """.format(model_json)
     
     return code
+    
+# Function to make prediction
+def predict_image(model, img_array):
+    """Make prediction using the model"""
+    prediction = model.predict(img_array)
+    # Binary classification where 0=Human, 1=AI
+    st.write(f"Prediction: {prediction}")
+    probability = prediction[0][0]
+    return probability
 
 if uploaded_file is not None:
     try:

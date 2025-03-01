@@ -7,7 +7,7 @@ import numpy as np
 import os
 from tensorflow.keras.models import load_model
 import tempfile
-import custom_objects
+from custom_objects import CustomDataAugmentation, ResNetPreprocessingLayer
 
 # Configure page
 st.set_page_config(page_title="Keras Model Loader", layout="wide")

@@ -78,18 +78,18 @@ def preprocess_image(_image, target_size=(640, 640)):
     """Caches image preprocessing to avoid redundant computation."""
     try:
         # Convert to RGB if needed
-        if image.mode != "RGB":
-            image = image.convert("RGB")
+        if _image.mode != "RGB":
+            _image = _image.convert("RGB")
             
         # Resize with proper error handling
         try:
-            image = image.resize(target_size, Image.LANCZOS)
+            _image = _image.resize(target_size, Image.LANCZOS)
         except (AttributeError, ValueError):
             # Fallback to NEAREST for problematic images
-            image = image.resize(target_size, Image.NEAREST)
+            _image = _image.resize(target_size, Image.NEAREST)
             
         # Convert to array
-        img_array = np.array(image, dtype=np.float32)  # Specify dtype for consistency
+        img_array = np.array(_image, dtype=np.float32)  # Specify dtype for consistency
         
         # Add batch dimension
         img_array = np.expand_dims(img_array, axis=0)

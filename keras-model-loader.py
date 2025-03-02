@@ -34,7 +34,7 @@ if st.checkbox("Show memory usage", value=False):
     memory_container.info(f"Current memory usage: {memory_usage:.2f} MB")
 
 # File size validator
-def validate_file_size(file, max_size_mb=200):
+def validate_file_size(file, max_size_mb=500):
     """Validates that the uploaded file isn't too large"""
     if file.size > max_size_mb * 1024 * 1024:
         st.error(f"File is too large! Maximum size is {max_size_mb}MB.")

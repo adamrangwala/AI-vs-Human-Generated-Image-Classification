@@ -286,7 +286,10 @@ if uploaded_file is not None:
                                             label = "AI-Generated" if probability > 0.5 else "Human-Generated"
                                             color = "red" if probability > 0.5 else "green"
                                             emoji = "🤖" if probability > 0.5 else "🧑"
-                                            
+
+                                            for i in range(10):
+                                                st.markdown("")
+                                                i+=1
                                             st.markdown(f"<h1 style='text-align: center; color: {color};'>{label} Image</h1>", unsafe_allow_html=True)
                                             st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
                                             

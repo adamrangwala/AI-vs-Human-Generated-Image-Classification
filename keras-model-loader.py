@@ -331,14 +331,17 @@ if uploaded_file is not None:
                 if probability > 0.5:
                     confidence = round(probability * 100, 2)
                     with sample_col2:
-                        st.markdown(f"<div class='result-header ai-result'>AI-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
-                        rain(emoji="👨", font_size=54, falling_speed=5, animation_length="infinite") 
+                        st.markdown("<h1 style='text-align: center; color: red;'>AI-Generated Image</h1>", unsafe_allow_html=True)
+                        st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
+                        rain(emoji="🤖", font_size=80, falling_speed=5, animation_length=10)
+
                 else:
                     confidence = round((1 - probability) * 100, 2)
                     with sample_col2:
-                        st.markdown(f"<div class='result-header human-result'>Human-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
-                        rain(emoji="🤖", font_size=54, falling_speed=5, animation_length="infinite") 
-                
+                        st.markdown("<h1 style='text-align: center; color: green;'>Human-Generated Image</h1>", unsafe_allow_html=True)
+                        st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
+                        rain(emoji="🧑", font_size=80, falling_speed=5, animation_length=10)               
+                        
                 # Add explanation
                 st.markdown("### How it works")
                 st.write("""

@@ -3,3 +3,4 @@ streamlit-extras
 tensorflow>=2.17.1
 numpy>=1.22.0
 pillow>=9.0.0
+psutil 

@@ -235,10 +235,6 @@ if uploaded_file is not None:
 
         # Force garbage collection
         gc.collect()
-        
-        if st.checkbox("Show memory usage", value=False):
-            memory_usage = get_memory_usage()
-            st.info(f"Memory usage after model load: {memory_usage:.2f} MB")
 
         # Tabs for different views
         tabs = st.tabs(["Prediction", "Summary", "Architecture", "Weights"])

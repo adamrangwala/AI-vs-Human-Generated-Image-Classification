@@ -74,7 +74,7 @@ def load_keras_model(model_path, custom_objects_dict=None):
         return None
 
 @st.cache_data
-def preprocess_image(image, target_size=(640, 640)):
+def preprocess_image(_image, target_size=(640, 640)):
     """Caches image preprocessing to avoid redundant computation."""
     try:
         # Convert to RGB if needed

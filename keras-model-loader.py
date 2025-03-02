@@ -90,8 +90,8 @@ if uploaded_file is not None:
             uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
             if uploaded_img is not None:
                 with pred_col1:
-                image = Image.open(uploaded_img).convert("RGB")
-                st.image(image, caption="Uploaded Image", width=400)
+                    image = Image.open(uploaded_img).convert("RGB")
+                    st.image(image, caption="Uploaded Image", width=400)
 
                 with st.spinner("Analyzing image..."):
                     image_array = preprocess_image(image)

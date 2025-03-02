@@ -82,33 +82,14 @@ if uploaded_file is not None:
         st.success(f"Model loaded successfully from {uploaded_file.name}")
 
         # Tabs for different views
-        tabs = st.tabs(["Summary", "Architecture", "Weights", "Prediction"])
-
-        # Summary tab
-        with tabs[0]:
-            st.subheader("Model Summary")
-            summary_io = io.StringIO()
-            model.summary(print_fn=lambda x: summary_io.write(x + '\n'))
-            st.code(summary_io.getvalue(), language="text")
-
-        # Architecture tab
-        with tabs[1]:
-            st.subheader("Model Architecture")
-            architecture_json = serialize_model_architecture(model)
-            st.code(architecture_json, language="json")
-            st.download_button("Download Architecture JSON", data=architecture_json, file_name="model_architecture.json", mime="application/json")
-
-        # Weights tab
-        with tabs[2]:
-            st.subheader("Model Weights Information")
-            weights_info = get_model_weights_info(model)
-            st.dataframe(weights_info)
-            st.download_button("Download Weights JSON", data=json.dumps(weights_info, indent=2), file_name="weights_info.json", mime="application/json")
+        tabs = st.tabs(["Prediction", "Summary", "Architecture", "Weights"])
 
         # Image upload for prediction
-        with tabs[3]:
+        with tabs[0]:
+            pred_col1, pred_col2 = st.columns(2)
             uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
             if uploaded_img is not None:
+                with pred_col1:
                 image = Image.open(uploaded_img).convert("RGB")
                 st.image(image, caption="Uploaded Image", width=400)
 
@@ -120,10 +101,33 @@ if uploaded_file is not None:
                     label = "AI-Generated" if probability > 0.5 else "Human-Generated"
                     color = "red" if probability > 0.5 else "green"
                     emoji = "🤖" if probability > 0.5 else "🧑"
+                    
+                    with pred_col2:
+                        st.markdown(f"<h1 style='text-align: center; color: {color};'>{label} Image</h1>", unsafe_allow_html=True)
+                        st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
+                        rain(emoji=emoji, font_size=80, falling_speed=5, animation_length=5)
+        # Summary tab
+        with tabs[1]:
+            st.subheader("Model Summary")
+            summary_io = io.StringIO()
+            model.summary(print_fn=lambda x: summary_io.write(x + '\n'))
+            st.code(summary_io.getvalue(), language="text")
 
-                    st.markdown(f"<h1 style='text-align: center; color: {color};'>{label} Image</h1>", unsafe_allow_html=True)
-                    st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
-                    rain(emoji=emoji, font_size=80, falling_speed=5, animation_length=5)
+        # Architecture tab
+        with tabs[2]:
+            st.subheader("Model Architecture")
+            architecture_json = serialize_model_architecture(model)
+            st.code(architecture_json, language="json")
+            st.download_button("Download Architecture JSON", data=architecture_json, file_name="model_architecture.json", mime="application/json")
+
+        # Weights tab
+        with tabs[3]:
+            st.subheader("Model Weights Information")
+            weights_info = get_model_weights_info(model)
+            st.dataframe(weights_info)
+            st.download_button("Download Weights JSON", data=json.dumps(weights_info, indent=2), file_name="weights_info.json", mime="application/json")
+
+     
 
     except Exception as e:
         st.error(f"Error loading the model: {str(e)}")

@@ -332,12 +332,12 @@ if uploaded_file is not None:
                     confidence = round(probability * 100, 2)
                     with sample_col2:
                         st.markdown(f"<div class='result-header ai-result'>AI-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
-                        st.rain(emoji="👨", font_size=54, falling_speed=5, animation_length="infinite") 
+                        rain(emoji="👨", font_size=54, falling_speed=5, animation_length="infinite") 
                 else:
                     confidence = round((1 - probability) * 100, 2)
                     with sample_col2:
                         st.markdown(f"<div class='result-header human-result'>Human-Generated <span class='confidence'>{confidence}%</span> confidence</div>", unsafe_allow_html=True)
-                        st.rain(emoji="🤖", font_size=54, falling_speed=5, animation_length="infinite") 
+                        rain(emoji="🤖", font_size=54, falling_speed=5, animation_length="infinite") 
                 
                 # Add explanation
                 st.markdown("### How it works")

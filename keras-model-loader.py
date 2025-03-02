@@ -198,7 +198,7 @@ def predict_image(model, img_array):
 
 # Process uploaded model
 if uploaded_file is not None:
-    if not validate_file_size(uploaded_file, max_size_mb=200):
+    if not validate_file_size(uploaded_file, max_size_mb=500):
         st.stop()
         
     try:

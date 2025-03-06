@@ -161,9 +161,7 @@ def serialize_model_architecture(model):
         st.error(f"Error serializing model architecture: {str(e)}")
         return json.dumps({"error": str(e)})
 
-@st.cache_data
 def predict_image(model, img_array):
-    """Caches model predictions with error handling."""
     if img_array is None:
         return None
         

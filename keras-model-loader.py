@@ -67,7 +67,7 @@ def load_keras_model(model_path, custom_objects_dict=None):
         st.code(traceback.format_exc(), language="text")
         return None
 
-@st.cache_data
+
 def preprocess_image(_image, target_size=(224, 224)):
     """Caches image preprocessing to avoid redundant computation."""
     try:

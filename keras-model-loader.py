@@ -287,12 +287,6 @@ if uploaded_file is not None:
                                             st.markdown(f"<h1 style='text-align: center; color: {color};'>{label} Image</h1>", unsafe_allow_html=True)
                                             st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
                                             
-                                            # Use try/except for rain animation
-                                            try:
-                                                rain(emoji=emoji, font_size=80, falling_speed=5, animation_length=5)
-                                            except Exception as e:
-                                                st.warning(f"Could not display animation: {str(e)}")
-                                                st.markdown(f"<h1 style='text-align: center;'>{emoji}</h1>", unsafe_allow_html=True)
                                     else:
                                         st.error("Failed to generate prediction.")
                     except Exception as e:

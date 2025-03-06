@@ -49,12 +49,6 @@ uploaded_file = st.file_uploader("Choose a model file", type=["keras", "h5"])
 def load_keras_model(model_path, custom_objects_dict=None):
     """Loads and caches the Keras model to prevent reloading on each interaction."""
     try:
-        if custom_objects_dict is None:
-            custom_objects_dict = {
-                "CustomDataAugmentation": CustomDataAugmentation,
-                "ResNetPreprocessingLayer": ResNetPreprocessingLayer
-            }
-        
         # Configure TensorFlow for memory efficiency
         tf.config.experimental.set_memory_growth(
             tf.config.experimental.list_physical_devices('GPU')[0], True
@@ -65,7 +59,7 @@ def load_keras_model(model_path, custom_objects_dict=None):
         
         # Try to load the model with CPU first for stability
         with tf.device('/CPU:0'):
-            model = load_model(model_path, custom_objects=custom_objects_dict)
+            model = load_model(model_path)
         
         return model
     except Exception as e:
@@ -74,7 +68,7 @@ def load_keras_model(model_path, custom_objects_dict=None):
         return None
 
 @st.cache_data
-def preprocess_image(_image, target_size=(640, 640)):
+def preprocess_image(_image, target_size=(224, 224)):
     """Caches image preprocessing to avoid redundant computation."""
     try:
         # Convert to RGB if needed
@@ -268,9 +262,9 @@ if uploaded_file is not None:
                                 try:
                                     input_shape = model.input_shape[1:3]
                                     if None in input_shape:
-                                        input_shape = (640, 640)  # Default
+                                        input_shape = (224, 224)  # Default
                                 except (IndexError, AttributeError):
-                                    input_shape = (640, 640)  # Default
+                                    input_shape = (224, 224)  # Default
                                     
                                 st.caption(f"Resizing to {input_shape} for model input")
                                 

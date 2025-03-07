@@ -166,10 +166,10 @@ This tool uses a deep learning model to analyze images and determine if they wer
 st.sidebar.title("About")
 st.sidebar.info("""
 ### Training the Model
-This classification model was fine-tuned on 79,950 AI/Human-generated images from the following <a href="https://www.kaggle.com/competitions/detect-ai-vs-human-generated-images/data" target="_blank">kaggle competition</a>
+This classification model was fine-tuned on 79,950 AI/Human-generated images from the following <a href="https://www.kaggle.com/competitions/detect-ai-vs-human-generated-images/data" target="_blank">Kaggle competition</a>.
 
-The results of training can be seen tested on the validation set below:)
-st.sidebar(Image.open("pred_on_Val_dataset.jpg))
-
-
+The results of training can be seen tested on the validation set below.
 """)
+
+# Display image in the sidebar
+st.sidebar.image("pred_on_Val_dataset.jpg", caption="Validation Set Results")

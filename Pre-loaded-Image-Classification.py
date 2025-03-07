@@ -19,7 +19,6 @@ def get_memory_usage():
 # Streamlit header
 st.title("AI-Generated Image Identification")
 st.markdown("Upload an image to check if it's AI-generated or human-generated.")
-st.write("Current working directory:", os.getcwd())
 
 # Display memory usage if requested
 if st.checkbox("Show memory usage", value=False):
@@ -27,8 +26,6 @@ if st.checkbox("Show memory usage", value=False):
 
 # Model path
 MODEL_PATH = "model.keras"
-st.write("File exists:", os.path.exists(MODEL_PATH))  
-st.write("Keras version:", keras.__version__)
 
 @st.cache_resource(show_spinner=False)
 def load_model(path):
@@ -103,11 +100,9 @@ with col1:
     ai_col, human_col = st.columns([1, 1])
     with ai_col:
         if st.button("Sample AI Image"):
-            st.write("File exists:", os.path.exists("./samples/ai_sample.jpg"))
             uploaded_img="samples/ai_sample.jpg"
     with human_col:
         if st.button("Sample Human Image"):
-            st.write("File exists:", os.path.exists("./samples/human_sample.jpg"))
             uploaded_img="samples/human_sample.jpg"
             
     if uploaded_img is not None:

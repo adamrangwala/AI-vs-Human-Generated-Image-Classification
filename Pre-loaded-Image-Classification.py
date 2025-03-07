@@ -19,6 +19,7 @@ def get_memory_usage():
 # Streamlit header
 st.title("AI-Generated Image Identification")
 st.markdown("Upload an image to check if it's AI-generated or human-generated.")
+st.write("Current working directory:", os.getcwd())
 
 # Display memory usage if requested
 if st.checkbox("Show memory usage", value=False):

@@ -120,7 +120,6 @@ with col1:
                     
                     if image_array is not None:
                         probability = float(model.predict(image_array))
-                        st.write(probability)
                         if probability is not None:
                             with col2:
                                 confidence = round(probability * 100, 2) if probability > 0.5 else round((1 - probability) * 100, 2)

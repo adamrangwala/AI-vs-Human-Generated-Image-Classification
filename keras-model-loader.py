@@ -14,7 +14,7 @@ import traceback
 import psutil  
 
 # Configure page
-st.set_page_config(page_title="Keras Model Loader", layout="wide")
+st.set_page_config(page_title="AI Image Identification", layout="wide")
 
 # Memory monitoring function
 def get_memory_usage():
@@ -24,7 +24,7 @@ def get_memory_usage():
     return mem_info.rss / (1024 * 1024)
 
 # Streamlit header
-st.title("Keras Model Loader")
+st.title("AI-Generated Image Identification")
 st.markdown("Upload a .keras or .h5 model file to view its architecture and weights.")
 
 # Display current memory usage if in debug mode

@@ -73,7 +73,7 @@ if model is None:
     st.error("Failed to load the model. Please check that the model file exists.")
     st.stop()
 else:
-        st.success("Model loaded successfully!")
+    st.success("Model loaded successfully!")
 
 # Try to determine input shape
 try:
@@ -85,7 +85,9 @@ except:
 
 # Display model info
 with st.expander("Model Information"):
-    st.write(f"Model input shape: {input_shape}")
+    st.write(f"This model is a fine-tuned Resnet50 model trained on a dataset of 50,000 AI/Human-generated images")
+    st.write(f"Model Size: {model.size()}")
+    st.write(f"Model input image size: {input_shape}")
 
 # Main interface
 col1, col2 = st.columns([1, 1])

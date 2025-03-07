@@ -24,7 +24,7 @@ if st.checkbox("Show memory usage", value=False):
     st.info(f"Current memory usage: {get_memory_usage():.2f} MB")
 
 # Model path
-MODEL_PATH = "./model.keras"
+MODEL_PATH = "model.keras"
 st.write("File exists:", os.path.exists(MODEL_PATH))  
 st.write("Keras version:", keras.__version__)
 

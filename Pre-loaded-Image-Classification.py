@@ -115,7 +115,7 @@ def validate_file_size(file, max_size_mb=10):
 
 # Load the model once when the app starts
 with st.spinner("Loading AI detection model..."):
-    model = load_model_from_path(MODEL_PATH)
+    model = load_model_from_path("/model.keras")
     
     if model is None:
         st.error("Failed to load the model. Please check that the model file exists in the app directory.")

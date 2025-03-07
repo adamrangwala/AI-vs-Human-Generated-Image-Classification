@@ -172,4 +172,4 @@ The results of training can be seen tested on the validation set below.
 """, unsafe_allow_html=True)
 
 # Display image in the sidebar
-st.sidebar.image("pred_on_Val_dataset.jpg", caption="Validation Set Results")
+st.sidebar.image("Pred_on_Val_dataset.jpg", caption="Validation Set Results")

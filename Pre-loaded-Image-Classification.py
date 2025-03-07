@@ -72,25 +72,10 @@ def predict_image(model, img_array):
     """Makes prediction on the image"""
     if img_array is None:
         return None
-    
     try:
         with tf.device('/CPU:0'):
-            result = model(img_array, training=False)
+            result = model.predict(img_array, training=False)
             
-            # Handle different output types
-            if isinstance(result, dict):
-                first_key = list(result.keys())[0]
-                result_value = result[first_key].numpy()
-            elif hasattr(result, 'numpy'):
-                result_value = result.numpy()
-            else:
-                result_value = np.array(result)
-            
-            # Return probability
-            if result_value.ndim > 1:
-                return result_value[0][0]
-            else:
-                return result_value[0]
     except Exception as e:
         st.error(f"Prediction error: {str(e)}")
         return None

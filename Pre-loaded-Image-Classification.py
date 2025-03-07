@@ -99,10 +99,10 @@ with col1:
     ai_col, human_col = st.columns([1, 1])
     with ai_col:
         if st.button("Sample AI Image"):
-            uploaded_img="/ai_sample.jpg"
+            uploaded_img="/samples/ai_sample.jpg"
     with human_col:
         if st.button("Sample Human Image"):
-            uploaded_img="/human_sample.jpg"
+            uploaded_img="/samples/human_sample.jpg"
     st.subheader("Upload an image to analyze")
     uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     

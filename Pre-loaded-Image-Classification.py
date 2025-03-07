@@ -165,11 +165,11 @@ This tool uses a deep learning model to analyze images and determine if they wer
 # Sidebar information
 st.sidebar.title("About")
 st.sidebar.info("""
-### AI Image Detection Tool
+### Training the Model
+This classification model was fine-tuned on 79,950 AI/Human-generated images from the following <a href="https://www.kaggle.com/competitions/detect-ai-vs-human-generated-images/data" target="_blank">kaggle competition</a>
 
-This application uses a neural network model trained to distinguish between AI-generated and human-created images.
+The results of training can be seen tested on the validation set below:)
+st.sidebar(Image.open("pred_on_Val_dataset.jpg))
 
-The model analyzes visual patterns, inconsistencies, and artifacts that may indicate AI generation.
 
-**Privacy Note:** Uploaded images are processed locally and are not stored.
 """)

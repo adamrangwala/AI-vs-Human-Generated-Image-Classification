@@ -162,7 +162,6 @@ This tool uses a deep learning model to analyze images and determine if they wer
 # Sidebar information
 st.sidebar.title("About")
 st.sidebar.markdown("""
-### Training the Model
 This model was created for the following [Kaggle competition](https://www.kaggle.com/competitions/detect-ai-vs-human-generated-images/data).
 
 The results of training can be seen tested on the validation set below.

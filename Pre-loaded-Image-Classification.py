@@ -31,20 +31,18 @@ MODEL_PATH = "model.keras"
 def load_model(path):
     """Loads the model"""
     try:
-        with st.status("Loading model..."):
-            # Configure TensorFlow for memory efficiency if GPU is available
-            gpus = tf.config.experimental.list_physical_devices('GPU')
-            if gpus:
-                tf.config.experimental.set_memory_growth(gpus[0], True)
-            
-            # Load model with CPU for stability
-            with tf.device('/CPU:0'):
-                model = keras.models.load_model(path)
-                return model
+        # Configure TensorFlow for memory efficiency if GPU is available
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            tf.config.experimental.set_memory_growth(gpus[0], True)
+        
+        # Load model with CPU for stability
+        with tf.device('/CPU:0'):
+            model = keras.models.load_model(path)
+            return model
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
         return None
-
 
 def preprocess_image(image, target_size=(224, 224)):
     """Preprocesses image for ResNet50 model input"""
@@ -69,13 +67,12 @@ def preprocess_image(image, target_size=(224, 224)):
         return None
 
 # Load the model
-with st.spinner("Loading AI detection model..."):
-    model = load_model(MODEL_PATH)
-    
-    if model is None:
-        st.error("Failed to load the model. Please check that the model file exists.")
-        st.stop()
-    else:
+model = load_model(MODEL_PATH)
+
+if model is None:
+    st.error("Failed to load the model. Please check that the model file exists.")
+    st.stop()
+else:
         st.success("Model loaded successfully!")
 
 # Try to determine input shape

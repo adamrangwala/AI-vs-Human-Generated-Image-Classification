@@ -163,7 +163,7 @@ This tool uses a deep learning model to analyze images and determine if they wer
 st.sidebar.title("About")
 st.sidebar.markdown("""
 ### Training the Model
-This Resnet50-based classification model was fine-tuned on 79,950 AI/Human-generated images from the following [Kaggle competition](https://www.kaggle.com/competitions/detect-ai-vs-human-generated-images/data).
+This model was created for the following [Kaggle competition](https://www.kaggle.com/competitions/detect-ai-vs-human-generated-images/data).
 
 The results of training can be seen tested on the validation set below.
 """, unsafe_allow_html=True)

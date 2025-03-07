@@ -25,6 +25,7 @@ if st.checkbox("Show memory usage", value=False):
 
 # Model path
 MODEL_PATH = "./model.keras"
+st.write("File exists:", os.path.exists(MODEL_PATH))  
 
 @st.cache_resource(show_spinner=False)
 def load_model(path):

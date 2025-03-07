@@ -68,18 +68,6 @@ def preprocess_image(image, target_size=(224, 224)):
         st.error(f"Error preprocessing image: {str(e)}")
         return None
 
-def predict_image(model, img_array):
-    """Makes prediction on the image"""
-    if img_array is None:
-        return None
-    try:
-        with tf.device('/CPU:0'):
-            result = model.predict(img_array, training=False)
-            
-    except Exception as e:
-        st.error(f"Prediction error: {str(e)}")
-        return None
-
 # Load the model
 with st.spinner("Loading AI detection model..."):
     model = load_model(MODEL_PATH)
@@ -130,7 +118,7 @@ with col1:
                     image_array = preprocess_image(image, target_size=input_shape)
                     
                     if image_array is not None:
-                        probability = predict_image(model, image_array)
+                        probability = model.predict(image_array)
                         
                         if probability is not None:
                             with col2:

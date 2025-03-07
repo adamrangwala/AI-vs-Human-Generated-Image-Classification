@@ -28,7 +28,7 @@ if st.checkbox("Show memory usage", value=False):
     memory_container.info(f"Current memory usage: {memory_usage:.2f} MB")
 
 # Model path - assuming model.keras is in the same directory as the app
-MODEL_PATH = "model.keras"
+MODEL_PATH = "./model.keras"
 
 @st.cache_resource(show_spinner=False)
 def load_model_from_path(path):
@@ -115,7 +115,7 @@ def validate_file_size(file, max_size_mb=10):
 
 # Load the model once when the app starts
 with st.spinner("Loading AI detection model..."):
-    model = load_model_from_path("/model.keras")
+    model = load_model_from_path("MODEL_PATH")
     
     if model is None:
         st.error("Failed to load the model. Please check that the model file exists in the app directory.")

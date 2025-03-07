@@ -189,184 +189,162 @@ def predict_image(model, img_array):
         return None
 
 # Process uploaded model
-if uploaded_file is not None:
-    if not validate_file_size(uploaded_file, max_size_mb=500):
+try:
+    # Progress indicator for model loading
+    progress_bar = st.progress(0)
+    
+    progress_bar.progress(0.3)
+    status_text.text("Loading model (this may take a while for large models)...")
+    
+    with st.spinner("Loading model..."):
+        model = load_keras_model("Keras_Model_Uploader/model.keras")
+    
+    if model is None:
+        st.error("Failed to load model. Please check the model format and try again.")
         st.stop()
-        
-    try:
-        # Progress indicator for model loading
-        progress_bar = st.progress(0)
-        status_text = st.empty()
-        status_text.text("Saving uploaded model to temporary file...")
-        
-        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
-            tmp_file.write(uploaded_file.getvalue())
-            tmp_filename = tmp_file.name
-        
-        progress_bar.progress(0.3)
-        status_text.text("Loading model (this may take a while for large models)...")
-        
-        with st.spinner("Loading model..."):
-            model = load_keras_model(tmp_filename)
 
-        # Clean up temp file
+    # Force garbage collection
+    gc.collect()
+
+    # Tabs for different views
+    tabs = st.tabs(["Prediction", "Summary", "Architecture", "Weights"])
+
+    # Image upload for prediction
+    with tabs[0]:
+        pred_col1, pred_col2 = st.columns(2)
+        
+        with pred_col1:
+            st.subheader("Upload an image to analyze")
+            uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+            
+            if uploaded_img is not None:
+                try:
+                    # Validate image size
+                    if not validate_file_size(uploaded_img, max_size_mb=10):
+                        st.warning("Image is too large, please upload a smaller image.")
+                    else:
+                        # Display image
+                        image = Image.open(uploaded_img)
+                        if image is None:
+                            st.error("Failed to load image. Please try another file.")
+                        st.image(image, caption="Uploaded Image", width=400)
+                        
+                        # Show image details
+                        width, height = image.size
+                        st.caption(f"Image dimensions: {width}x{height} pixels, {image.mode} mode")
+                        
+                        with st.spinner("Analyzing image..."):
+                            # Get input shape from model
+                            try:
+                                input_shape = model.input_shape[1:3]
+                                if None in input_shape:
+                                    input_shape = (224, 224)  # Default
+                            except (IndexError, AttributeError):
+                                input_shape = (224, 224)  # Default
+                                
+                            st.caption(f"Resizing to {input_shape} for model input")
+                            
+                            # Preprocess and predict
+                            image_array = preprocess_image(image, target_size=input_shape)
+                            
+                            if image_array is not None:
+                                probability = predict_image(model, image_array)
+                                
+                                if probability is not None:
+                                    with pred_col2:
+                                        confidence = round(probability * 100, 2) if probability > 0.5 else round((1 - probability) * 100, 2)
+                                        label = "AI-Generated" if probability > 0.5 else "Human-Generated"
+                                        color = "red" if probability > 0.5 else "green"
+                                        emoji = "🤖" if probability > 0.5 else "🧑"
+
+                                        for i in range(10):
+                                            st.markdown("")
+                                            i+=1
+                                        st.markdown(f"<h1 style='text-align: center; color: {color};'>{label} Image</h1>", unsafe_allow_html=True)
+                                        st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
+                                        
+                                else:
+                                    st.error("Failed to generate prediction.")
+                except Exception as e:
+                    st.error(f"Error processing image: {str(e)}")
+                    st.code(traceback.format_exc(), language="text")
+
+    # Summary tab
+    with tabs[1]:
+        st.subheader("Model Summary")
+        try:
+            summary_io = io.StringIO()
+            
+            # Safely generate summary
+            try:
+                model.summary(print_fn=lambda x: summary_io.write(x + '\n'))
+                st.code(summary_io.getvalue(), language="text")
+            except ValueError:
+                st.warning("Could not generate complete summary. The model structure may be complex.")
+                st.write("Basic model information:")
+                st.write(f"Number of layers: {len(model.layers)}")
+                st.write(f"Input shape: {model.input_shape}")
+                st.write(f"Output shape: {model.output_shape}")
+        except Exception as e:
+            st.error(f"Error displaying model summary: {str(e)}")
+
+    # Architecture tab
+    with tabs[2]:
+        st.subheader("Model Architecture")
+        try:
+            architecture_json = serialize_model_architecture(model)
+            
+            # Display a sample of the architecture if it's very large
+            if len(architecture_json) > 500000:
+                st.warning("Model architecture is very large. Showing first 100KB...")
+                st.code(architecture_json[:100000], language="json")
+            else:
+                st.code(architecture_json, language="json")
+                
+            st.download_button("Download Architecture JSON", data=architecture_json, file_name="model_architecture.json", mime="application/json")
+        except Exception as e:
+            st.error(f"Error displaying model architecture: {str(e)}")
+
+    # Weights tab
+    with tabs[3]:
+        st.subheader("Model Weights Information")
+        try:
+            st.warning("For large models, this may take a while and consume significant memory.")
+            if st.button("Analyze Weights"):
+                weights_info = get_model_weights_info(model)
+                
+                # Convert to DataFrame for better display
+                try:
+                    import pandas as pd
+                    df = pd.DataFrame(weights_info)
+                    
+                    # Calculate total model size
+                    total_mb = df['size_mb'].sum() if 'size_mb' in df.columns else 0
+                    st.info(f"Total model size: {total_mb:.2f} MB")
+                    
+                    st.dataframe(df)
+                except Exception:
+                    st.json(weights_info)
+                    
+                # Provide download
+                st.download_button("Download Weights JSON", 
+                                data=json.dumps(weights_info, indent=2), 
+                                file_name="weights_info.json", 
+                                mime="application/json")
+                
+                # Force garbage collection after weights analysis
+                gc.collect()
+        except Exception as e:
+            st.error(f"Error analyzing weights: {str(e)}")
+            
+except Exception as e:
+    st.error(f"Error loading the model: {str(e)}")
+    st.code(traceback.format_exc(), language="text")
+    
+finally:
+    # Final cleanup
+    if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
         try:
             os.unlink(tmp_filename)
-        except Exception as e:
-            st.warning(f"Could not delete temporary file: {str(e)}")
-        
-        progress_bar.progress(1.0)
-        status_text.empty()
-        progress_bar.empty()
-        
-        if model is None:
-            st.error("Failed to load model. Please check the model format and try again.")
-            st.stop()
-            
-        st.success(f"Model loaded successfully from {uploaded_file.name}")
-
-        # Force garbage collection
-        gc.collect()
-
-        # Tabs for different views
-        tabs = st.tabs(["Prediction", "Summary", "Architecture", "Weights"])
-
-        # Image upload for prediction
-        with tabs[0]:
-            pred_col1, pred_col2 = st.columns(2)
-            
-            with pred_col1:
-                st.subheader("Upload an image to analyze")
-                uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-                
-                if uploaded_img is not None:
-                    try:
-                        # Validate image size
-                        if not validate_file_size(uploaded_img, max_size_mb=10):
-                            st.warning("Image is too large, please upload a smaller image.")
-                        else:
-                            # Display image
-                            image = Image.open(uploaded_img)
-                            if image is None:
-                                st.error("Failed to load image. Please try another file.")
-                            st.image(image, caption="Uploaded Image", width=400)
-                            
-                            # Show image details
-                            width, height = image.size
-                            st.caption(f"Image dimensions: {width}x{height} pixels, {image.mode} mode")
-                            
-                            with st.spinner("Analyzing image..."):
-                                # Get input shape from model
-                                try:
-                                    input_shape = model.input_shape[1:3]
-                                    if None in input_shape:
-                                        input_shape = (224, 224)  # Default
-                                except (IndexError, AttributeError):
-                                    input_shape = (224, 224)  # Default
-                                    
-                                st.caption(f"Resizing to {input_shape} for model input")
-                                
-                                # Preprocess and predict
-                                image_array = preprocess_image(image, target_size=input_shape)
-                                
-                                if image_array is not None:
-                                    probability = predict_image(model, image_array)
-                                    
-                                    if probability is not None:
-                                        with pred_col2:
-                                            confidence = round(probability * 100, 2) if probability > 0.5 else round((1 - probability) * 100, 2)
-                                            label = "AI-Generated" if probability > 0.5 else "Human-Generated"
-                                            color = "red" if probability > 0.5 else "green"
-                                            emoji = "🤖" if probability > 0.5 else "🧑"
-
-                                            for i in range(10):
-                                                st.markdown("")
-                                                i+=1
-                                            st.markdown(f"<h1 style='text-align: center; color: {color};'>{label} Image</h1>", unsafe_allow_html=True)
-                                            st.markdown(f"<h2 style='text-align: center; color: black;'>{confidence}% confidence</h2>", unsafe_allow_html=True)
-                                            
-                                    else:
-                                        st.error("Failed to generate prediction.")
-                    except Exception as e:
-                        st.error(f"Error processing image: {str(e)}")
-                        st.code(traceback.format_exc(), language="text")
-
-        # Summary tab
-        with tabs[1]:
-            st.subheader("Model Summary")
-            try:
-                summary_io = io.StringIO()
-                
-                # Safely generate summary
-                try:
-                    model.summary(print_fn=lambda x: summary_io.write(x + '\n'))
-                    st.code(summary_io.getvalue(), language="text")
-                except ValueError:
-                    st.warning("Could not generate complete summary. The model structure may be complex.")
-                    st.write("Basic model information:")
-                    st.write(f"Number of layers: {len(model.layers)}")
-                    st.write(f"Input shape: {model.input_shape}")
-                    st.write(f"Output shape: {model.output_shape}")
-            except Exception as e:
-                st.error(f"Error displaying model summary: {str(e)}")
-
-        # Architecture tab
-        with tabs[2]:
-            st.subheader("Model Architecture")
-            try:
-                architecture_json = serialize_model_architecture(model)
-                
-                # Display a sample of the architecture if it's very large
-                if len(architecture_json) > 500000:
-                    st.warning("Model architecture is very large. Showing first 100KB...")
-                    st.code(architecture_json[:100000], language="json")
-                else:
-                    st.code(architecture_json, language="json")
-                    
-                st.download_button("Download Architecture JSON", data=architecture_json, file_name="model_architecture.json", mime="application/json")
-            except Exception as e:
-                st.error(f"Error displaying model architecture: {str(e)}")
-
-        # Weights tab
-        with tabs[3]:
-            st.subheader("Model Weights Information")
-            try:
-                st.warning("For large models, this may take a while and consume significant memory.")
-                if st.button("Analyze Weights"):
-                    weights_info = get_model_weights_info(model)
-                    
-                    # Convert to DataFrame for better display
-                    try:
-                        import pandas as pd
-                        df = pd.DataFrame(weights_info)
-                        
-                        # Calculate total model size
-                        total_mb = df['size_mb'].sum() if 'size_mb' in df.columns else 0
-                        st.info(f"Total model size: {total_mb:.2f} MB")
-                        
-                        st.dataframe(df)
-                    except Exception:
-                        st.json(weights_info)
-                        
-                    # Provide download
-                    st.download_button("Download Weights JSON", 
-                                    data=json.dumps(weights_info, indent=2), 
-                                    file_name="weights_info.json", 
-                                    mime="application/json")
-                    
-                    # Force garbage collection after weights analysis
-                    gc.collect()
-            except Exception as e:
-                st.error(f"Error analyzing weights: {str(e)}")
-                
-    except Exception as e:
-        st.error(f"Error loading the model: {str(e)}")
-        st.code(traceback.format_exc(), language="text")
-        
-    finally:
-        # Final cleanup
-        if 'tmp_filename' in locals() and os.path.exists(tmp_filename):
-            try:
-                os.unlink(tmp_filename)
-            except:
-                pass
+        except:
+            pass

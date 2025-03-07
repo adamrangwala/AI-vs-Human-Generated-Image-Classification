@@ -111,10 +111,6 @@ with col1:
             
     if uploaded_img is not None:
         try:
-            # Check file size (max 10MB)
-            if uploaded_img.size > 10 * 1024 * 1024:
-                st.error("File is too large! Maximum size is 10MB.")
-            else:
                 # Display image
                 image = Image.open(uploaded_img)
                 st.image(image, caption="Uploaded Image", width=400)

@@ -29,7 +29,7 @@ if st.checkbox("Show memory usage", value=False):
     memory_container.info(f"Current memory usage: {memory_usage:.2f} MB")
 
 # Model path - assuming model is in the same directory as the app
-MODEL_PATH = "model"  # Directory containing the SavedModel
+MODEL_PATH = "./model.keras"  # Directory containing the SavedModel
 
 @st.cache_resource(show_spinner=False)
 def load_saved_model(path):

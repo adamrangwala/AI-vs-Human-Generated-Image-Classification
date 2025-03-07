@@ -118,7 +118,7 @@ with col1:
                     image_array = preprocess_image(image, target_size=input_shape)
                     
                     if image_array is not None:
-                        probability = model.predict(image_array)
+                        probability = float(model.predict(image_array))
                         
                         if probability is not None:
                             with col2:

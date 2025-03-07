@@ -1,6 +1,7 @@
 import streamlit as st
 import tensorflow as tf
 import keras
+from tensorflow.keras.applications.resnet50 import preprocess_input
 import numpy as np
 import os
 from PIL import Image
@@ -46,21 +47,22 @@ def load_model(path):
         st.error(f"Error loading model: {str(e)}")
         return None
 
+
 def preprocess_image(image, target_size=(224, 224)):
-    """Preprocesses image for model input"""
+    """Preprocesses image for ResNet50 model input"""
     try:
         # Convert to RGB if needed
         if image.mode != "RGB":
             image = image.convert("RGB")
         
-        # Resize image
-        try:
-            image = image.resize(target_size, Image.LANCZOS)
-        except (AttributeError, ValueError):
-            image = image.resize(target_size, Image.NEAREST)
+        # Resize image to match ResNet50 input size
+        image = image.resize(target_size, Image.LANCZOS)
         
-        # Convert to normalized array
-        img_array = np.array(image, dtype=np.float32) / 255.0
+        # Convert to array
+        img_array = np.array(image, dtype=np.float32)
+        
+        # Preprocess image for ResNet50
+        img_array = preprocess_input(img_array)  # This step is crucial
         
         # Add batch dimension
         return np.expand_dims(img_array, axis=0)

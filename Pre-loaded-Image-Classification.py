@@ -104,11 +104,11 @@ with col1:
     with ai_col:
         if st.button("Sample AI Image"):
             st.write("File exists:", os.path.exists("./samples/ai_sample.jpg"))
-            uploaded_img="/samples/ai_sample.jpg"
+            uploaded_img="samples/ai_sample.jpg"
     with human_col:
         if st.button("Sample Human Image"):
             st.write("File exists:", os.path.exists("./samples/human_sample.jpg"))
-            uploaded_img="/samples/human_sample.jpg"
+            uploaded_img="samples/human_sample.jpg"
             
     if uploaded_img is not None:
         try:

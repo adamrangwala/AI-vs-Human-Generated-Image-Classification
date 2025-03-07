@@ -86,7 +86,7 @@ except:
 # Display model info
 with st.expander("Model Information"):
     st.write(f"This model is a fine-tuned Resnet50 model trained on a dataset of 50,000 AI/Human-generated images")
-    st.write(f"Model Size: {int(os.path.getsize("model.keras"))/(1024 * 1024):.2f} MB")
+    st.write(f"Model Size: {int(os.path.getsize('model.keras'))/(1024 * 1024):.2f} MB")
     st.write(f"Model input image size: {input_shape}")
 
 # Main interface

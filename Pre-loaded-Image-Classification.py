@@ -204,7 +204,7 @@ with col1:
         except Exception as e:
             st.error(f"Error processing image: {str(e)}")
             st.code(traceback.format_exc(), language="text")
-else:
+            
     st.markdown("""
     ### How It Works
     

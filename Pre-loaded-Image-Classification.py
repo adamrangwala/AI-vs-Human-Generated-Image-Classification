@@ -101,7 +101,7 @@ with col1:
         if st.button("Sample AI Image"):
             uploaded_img="/ai_sample.jpg"
     with human_col:
-        if st.button("Sample Human Image")
+        if st.button("Sample Human Image"):
             uploaded_img="/human_sample.jpg"
     st.subheader("Upload an image to analyze")
     uploaded_img = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])

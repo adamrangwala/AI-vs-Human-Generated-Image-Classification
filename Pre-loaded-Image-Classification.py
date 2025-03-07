@@ -119,7 +119,7 @@ with col1:
                     
                     if image_array is not None:
                         probability = float(model.predict(image_array))
-                        
+                        st.write(probability)
                         if probability is not None:
                             with col2:
                                 confidence = round(probability * 100, 2) if probability > 0.5 else round((1 - probability) * 100, 2)
@@ -137,11 +137,11 @@ with col1:
                                 if probability > 0.5:
                                     ai_confidence = probability * 100
                                     st.progress(ai_confidence / 100)
-                                    st.caption(f"AI confidence: {ai_confidence:.1f}%")
+                                    st.caption(f"AI confidence: {ai_confidence:.3f}%")
                                 else:
                                     human_confidence = (1 - probability) * 100
                                     st.progress(human_confidence / 100)
-                                    st.caption(f"Human confidence: {human_confidence:.1f}%")
+                                    st.caption(f"Human confidence: {human_confidence:.3f}%")
                         else:
                             st.error("Failed to generate prediction.")
         except Exception as e:

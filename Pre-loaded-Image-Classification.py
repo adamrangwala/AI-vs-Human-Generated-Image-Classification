@@ -115,8 +115,6 @@ with col1:
                 st.caption(f"Image dimensions: {width}x{height} pixels, {image.mode} mode")
                 
                 with st.spinner("Analyzing image..."):
-                    st.caption(f"Resizing to {input_shape} for model input")
-                    
                     # Preprocess and predict
                     image_array = preprocess_image(image, target_size=input_shape)
                     

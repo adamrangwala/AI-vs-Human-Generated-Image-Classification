@@ -44,8 +44,6 @@ This application uses a fine-tuned ResNet50 model trained on a dataset of AI-gen
 ## Customization
 
 You can customize the application by:
-- Updating the model path in the `load_model()` function
-- Changing the preprocessing steps in the `preprocess_image()` function to match your model's requirements
 - Modifying the CSS styling in the `st.markdown()` section
 - Adding additional sample images in the `samples` directory
 

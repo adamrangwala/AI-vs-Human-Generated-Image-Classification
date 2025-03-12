@@ -1,6 +1,6 @@
 # AI vs Human Image Classifier
 
-This <a href="https://ai-human-generated-image-classifier-nagba8rmfff8dvfxwpzs8c.streamlit.app/"> Streamlit application </a> uses a pre-trained Keras model to classify images as either AI-generated or human-created. Upload an image, and the app will analyze it, displaying the classification result with a confidence percentage.
+This <a href="https://ai-image-identification.streamlit.app/"> Streamlit application </a> uses a pre-trained Keras model to classify images as either AI-generated or human-created. Upload an image, and the app will analyze it, displaying the classification result with a confidence percentage.
 
 ## Features
 
